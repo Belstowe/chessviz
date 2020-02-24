@@ -1,2 +1,2 @@
-hello-world: main.c
-	cc -Wall -o hello-world main.c
+chessviz: main.c
+	cc -Wall -o chessviz main.c -lm
