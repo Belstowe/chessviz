@@ -51,20 +51,21 @@ int main() {
       switch (readm) {
         case 1:
           if (cur >= '0' && cur <= '9') {
-            ibuf2 += (cur - '0') * (pow(10, ibuf1++));
+            ibuf2 *= (pow(10, ibuf1++));
+			ibuf2 += (cur - '0');
           } else if (cur == '.') {
             readm++;
             if (move != ibuf2) {
               printf(
-                  " (ALERT: A number of move is misspecified. Expected '%d', "
+                  " <!-- (ALERT: A number of move is misspecified. Expected '%d', "
                   "got "
-                  "'%d'.) ",
+                  "'%d'.) --> ",
                   move, ibuf2);
             }
             move++;
           } else {
-            printf(" (ERROR: Unknown symbol: '%c'.) ", cur);
-            break;
+            printf(" <!-- (ERROR: Unknown symbol: '%c'.) --> ", cur);
+            return 0;
           }
       }
     } else {
