@@ -1,4 +1,2 @@
-/main
-/debug
-/chessviz
-*.o
+/build/*.o
+/bin/chessviz
