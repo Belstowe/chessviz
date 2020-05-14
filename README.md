@@ -1,4 +1,4 @@
-# Chessviz
+# Chessviz [![Build Status](https://api.travis-ci.com/Belstowe/chessviz.svg)](https://travis-ci.com/github/Belstowe/chessviz)]
 =====================
 ## This console program made for Linux is used to interprete moves on chessboard.
 
