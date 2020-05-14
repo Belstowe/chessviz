@@ -77,7 +77,7 @@ int main() {
   // char *str_buf = malloc(MAX_STRING_SIZE * sizeof(char));
   // char *str_point = str_buf;
   unsigned short move = 1, readm = 1;
-  short cell[2], behave, isCheck = 0, ifMate = 0;
+  short cell[2], behave, ifMate = 0;
   int ibuf1 = 0, ibuf2 = 0;
 
   char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
@@ -225,7 +225,7 @@ int main() {
 
           case 10:
             if (cur == '+') {
-              isCheck = 1;
+              //isCheck = 1;
               readm++;
               break;
             }
@@ -326,7 +326,7 @@ int main() {
 
           case 18:
             if (cur == '+') {
-              isCheck = 2;
+              //isCheck = 2;
               break;
             }
             else if (cur == '#') {

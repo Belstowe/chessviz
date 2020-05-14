@@ -2,10 +2,10 @@ C = gcc
 compile_flag = -Wall -Werror -c
 compile_debug_flag = -Wall -Werror -g -O0 -c
 link_flag = -o
+lib = -lm
 
 all: foldermake Main.o
-	cp ./src/*.c ./build/
-	$(C) $(link_flag) ./build/*.c -o ./bin/chessviz
+	$(C) ./build/*.c $(link_flag) ./bin/chessviz $(lib)
 
 Main.o:
 	$(C) $(compile_flag) ./src/main.c -o ./build/main.o
