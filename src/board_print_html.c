@@ -18,7 +18,8 @@ void board_print_html(char board[8][8], const char* file_name)
     }
 
     fprintf(html,
-            R"( <!DOCTYPE html>
+            R"(
+            <!DOCTYPE html>
 			<html>
 			<head>
 				<meta charset="utf-8"
@@ -64,8 +65,11 @@ void board_print_html(char board[8][8], const char* file_name)
     		</head>
 
     		<body>
-    			<table class="chessboard">
+    			<table class="chessboard">)");
+
+    fprintf(html,
+    		R"(
     			</table>
     		</body>
-			)");
+    		</html>)");
 }
