@@ -4,7 +4,7 @@ compile_debug_flag = -Wall -Werror -std=gnu99 -g -O0 -c
 link_flag = -o
 lib = -lm
 
-all: Main.o BoardPrintPlain.o BoardPrintHtml.o
+all: Main.o BoardPrintPlain.o BoardPrintHtml.o Board.o
 	$(C) ./build/*.o $(link_flag) ./bin/chessviz $(lib)
 
 Main.o:
@@ -15,6 +15,9 @@ BoardPrintPlain.o:
 
 BoardPrintHtml.o:
 	$(C) $(compile_flag) ./src/board_print_html.c -o ./build/board_print_html.o
+
+Board.o:
+	$(C) $(compile_flag) ./src/board.c -o ./build/board.o
 
 .PHONY: clean
 clean:

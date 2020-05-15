@@ -5,51 +5,7 @@
 
 #include "board_print_plain.h"
 #include "board_print_html.h"
-
-short sideOf(char c)
-{
-    if ((signed short)'Z' - (signed short)c < 1) // if figure is black
-        return -1;
-    else
-        return 1;
-}
-
-char interprete(unsigned short c)
-{
-    return c + 'a';
-}
-
-char* figurepr(char c)
-{
-    switch (c) {
-    case 'r':
-        return "Black Rook";
-    case 'n':
-        return "Black Knight";
-    case 'b':
-        return "Black Bishop";
-    case 'q':
-        return "Black Queen";
-    case 'k':
-        return "Black King";
-    case 'p':
-        return "Black Pawn";
-    case 'R':
-        return "White Rook";
-    case 'N':
-        return "White Knight";
-    case 'B':
-        return "White Bishop";
-    case 'Q':
-        return "White Queen";
-    case 'K':
-        return "White King";
-    case 'P':
-        return "White Pawn";
-    default:
-        return "Unknown";
-    }
-}
+#include "board.h"
 
 int main()
 {
@@ -145,16 +101,16 @@ int main()
             case 5:
                 if (board[cell[1]][cell[0]] == ' ') {
                     printf(" <!-- (ERROR: No figure on %c%d.) --> \n",
-                           interprete(cell[0]),
+                           cell_letter(cell[0]),
                            cell[1]);
                     return 0;
                 } else if (board[cell[1]][cell[0]] != figure) {
                     printf(" <!-- (ALERT: Figure on %c%d is wrong. Expected "
                            "%s, got %s.) --> \n",
-                           interprete(cell[0]),
+                           cell_letter(cell[0]),
                            cell[1] + 1,
-                           figurepr(figure),
-                           figurepr(board[cell[1]][cell[0]]));
+                           piece_name_print(figure),
+                           piece_name_print(board[cell[1]][cell[0]]));
                 }
                 readm++;
 
@@ -211,7 +167,7 @@ int main()
                         > 0) { // If both pieces are of one side
                         printf(" <!-- (ERROR: Piece is trying to capture its "
                                "own ally on %c%d.) --> \n",
-                               interprete(cell[0]),
+                               cell_letter(cell[0]),
                                cell[1] + 1);
                         return 0;
                     }
@@ -272,16 +228,16 @@ int main()
             case 14:
                 if (board[cell[1]][cell[0]] == ' ') {
                     printf(" <!-- (ERROR: No figure on %c%d.) --> \n",
-                           interprete(cell[0]),
+                           cell_letter(cell[0]),
                            cell[1]);
                     return 0;
                 } else if (board[cell[1]][cell[0]] != figure) {
                     printf(" <!-- (ALERT: Figure on %c%d is wrong. Expected "
                            "%s, got %s.) --> \n",
-                           interprete(cell[0]),
+                           cell_letter(cell[0]),
                            cell[1] + 1,
-                           figurepr(figure),
-                           figurepr(board[cell[1]][cell[0]]));
+                           piece_name_print(figure),
+                           piece_name_print(board[cell[1]][cell[0]]));
                 }
                 readm++;
 
@@ -348,7 +304,7 @@ int main()
                     > 0) { // If both pieces are of one side
                     printf(" <!-- (ERROR: Piece is trying to capture its own "
                            "ally on %c%d.) --> \n",
-                           interprete(cell[0]),
+                           cell_letter(cell[0]),
                            cell[1] + 1);
                     return 0;
                 }
