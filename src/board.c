@@ -2,13 +2,13 @@
 
 short side_of_piece(char c)
 {
-    if ((c >= 'A') && (c <= 'Z')) //Capital letter = white.
+    if ((c >= 'A') && (c <= 'Z')) // Capital letter = white.
         return 1;
-    
-    if ((c >= 'a') && (c <= 'z')) //Lowercase letter = black.
+
+    if ((c >= 'a') && (c <= 'z')) // Lowercase letter = black.
         return -1;
 
-    return 0; //Some other character - that's an error!
+    return 0; // Some other character - that's an error!
 }
 
 char cell_column(int cell[2])
@@ -16,7 +16,8 @@ char cell_column(int cell[2])
     return cell[0] + 'a';
 }
 
-char cell_row(int cell[2]) {
+char cell_row(int cell[2])
+{
     return cell[1] + '1';
 }
 
