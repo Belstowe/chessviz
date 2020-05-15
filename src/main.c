@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "board.h"
 #include "board_print_html.h"
@@ -18,13 +19,32 @@ char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
                     {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
                     {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'}};
 
-int main()
+int main(int argc, char* argv[])
 {
     char* input_string = malloc(MAX_STRING_SIZE * sizeof(char));
     char* white_move_pointer;
     char* black_move_pointer;
     int status = 0;
     unsigned substrs;
+
+    int mode = 0;
+    if (argc >= 2) {
+      if (!strcmp(argv[1], "--html\0"))
+        mode = 1;
+      else if (!strcmp(argv[1], "--text\0"))
+        mode = 0;
+      else if (!strcmp(argv[1], "--help\0")) {
+        printf("Usage:\n"\
+               "$ chessviz [--text|--html|--help]\n\n\n"\
+               "--text:\n"\
+               "      Prints final result of chessboard into a console.\n\n"\
+               "--html:\n"\
+               "      Prints final result of chessboard into HTML file ('board.html' by default).\n\n"\
+               "--help:\n"\
+               "      Prints this help message.");
+        return 0;
+      }
+    }
 
     printf("Welcome to Chessviz!\nThis program is used to interprete moves on "
            "chessboard.\n\nExample:\n1. e2-e4 e7-e5\n2. Bf1-c4 Nb8-c6\n3. "
@@ -65,5 +85,11 @@ int main()
         move_num++;
     }
 
-    board_print_plain(board);
+    if (mode == 0)
+      board_print_plain(board);
+    else if (mode == 1) {
+      if (!board_print_html(board, "board.html")) {
+        printf("Successfully printed chessboard to 'board.html'!\n");
+      }
+    }
 }
