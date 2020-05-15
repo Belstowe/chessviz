@@ -68,7 +68,7 @@ void board_print_html(char board[8][8], const char* file_name)
     			<table class="chessboard">)");
 
     fprintf(html,
-    		R"(
+            R"(
     			</table>
     		</body>
     		</html>)");
