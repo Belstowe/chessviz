@@ -151,79 +151,86 @@ char check_move_situation(char move[])
 /* check_move_validity
  * Returns:
  *     0 - success;
- *     1 - A Pawn can't move further than 1 cell forward (or 2 cells in case of starting position)!
- *     2 - A Pawn can't go to other column unless by chopping an enemy piece!
- *     3 - A Pawn always chops in diagonal, forward by a cell and side by a cell!
+ *     1 - A Pawn can't move further than 1 cell forward (or 2 cells in case of
+ * starting position)! 2 - A Pawn can't go to other column unless by chopping an
+ * enemy piece! 3 - A Pawn always chops in diagonal, forward by a cell and side
+ * by a cell!
  */
-int check_move_validity(char piece, int type, int orig_cell[2], int goto_cell[2]) {
-  switch (piece) {
+int check_move_validity(
+        char piece, int type, int orig_cell[2], int goto_cell[2])
+{
+    switch (piece) {
     case 'P':
-      if (type == '-') {
-        if (cell_row(orig_cell) == '2') {
-          if ((cell_row(goto_cell) != '3') && (cell_row(goto_cell) != '4'))
-            return 1;
-        }
-        else {
-          if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
-            return 1;
-        }
+        if (type == '-') {
+            if (cell_row(orig_cell) == '2') {
+                if ((cell_row(goto_cell) != '3')
+                    && (cell_row(goto_cell) != '4'))
+                    return 1;
+            } else {
+                if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
+                    return 1;
+            }
 
-        if (cell_column(goto_cell) != cell_column(orig_cell))
-          return 2;
-      }
-      else if (type == 'x') {
-        if ((cell_column(orig_cell) - cell_column(goto_cell) != 1) && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
-          return 3;
-        
-        if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
-          return 3;
-      }
-      break;
+            if (cell_column(goto_cell) != cell_column(orig_cell))
+                return 2;
+        } else if (type == 'x') {
+            if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
+                && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
+                return 3;
+
+            if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
+                return 3;
+        }
+        break;
 
     case 'p':
-      if (type == '-') {
-        if (cell_row(orig_cell) == '7') {
-          if ((cell_row(goto_cell) != '6') && (cell_row(goto_cell) != '5'))
-            return 1;
-        }
-        else {
-          if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
-            return 1;
-        }
+        if (type == '-') {
+            if (cell_row(orig_cell) == '7') {
+                if ((cell_row(goto_cell) != '6')
+                    && (cell_row(goto_cell) != '5'))
+                    return 1;
+            } else {
+                if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
+                    return 1;
+            }
 
-        if (cell_column(goto_cell) != cell_column(orig_cell))
-          return 2;
-      }
-      else if (type == 'x') {
-        if ((cell_column(orig_cell) - cell_column(goto_cell) != 1) && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
-          return 3;
-        
-        if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
-          return 3;
-      }
-      break;
-  }
+            if (cell_column(goto_cell) != cell_column(orig_cell))
+                return 2;
+        } else if (type == 'x') {
+            if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
+                && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
+                return 3;
 
-  return 0;
+            if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
+                return 3;
+        }
+        break;
+    }
+
+    return 0;
 }
 
-void interprete_validity(int code) {
-  if (code == 0)
-    return;
+void interprete_validity(int code)
+{
+    if (code == 0)
+        return;
 
-  switch (code) {
+    switch (code) {
     case 1:
-      printf(" * A Pawn can't move further than 1 cell forward (or 2 cells in case of starting position)!\n\n");
-      break;
+        printf(" * A Pawn can't move further than 1 cell forward (or 2 cells "
+               "in case of starting position)!\n\n");
+        break;
 
     case 2:
-      printf(" * A Pawn can't go to other column unless by chopping an enemy piece!\n\n");
-      break;
+        printf(" * A Pawn can't go to other column unless by chopping an enemy "
+               "piece!\n\n");
+        break;
 
     case 3:
-      printf(" * A Pawn always chops in diagonal, forward by a cell and side by a cell!\n\n");
-      break;
-  }
+        printf(" * A Pawn always chops in diagonal, forward by a cell and side "
+               "by a cell!\n\n");
+        break;
+    }
 }
 
 int check_white_move(char move[])
