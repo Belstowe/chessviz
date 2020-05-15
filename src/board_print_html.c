@@ -14,7 +14,7 @@ char* to_lower_case(char str[])
         if ((str[i] >= 'A') && (str[i] <= 'Z'))
             new_str[i] = str[i] - 'A' + 'a';
         else
-        	new_str[i] = str[i];
+            new_str[i] = str[i];
 
     new_str[i] = '\0';
     return new_str;

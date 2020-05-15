@@ -29,21 +29,22 @@ int main(int argc, char* argv[])
 
     int mode = 0;
     if (argc >= 2) {
-      if (!strcmp(argv[1], "--html\0"))
-        mode = 1;
-      else if (!strcmp(argv[1], "--text\0"))
-        mode = 0;
-      else if (!strcmp(argv[1], "--help\0")) {
-        printf("Usage:\n"\
-               "$ chessviz [--text|--html|--help]\n\n\n"\
-               "--text:\n"\
-               "      Prints final result of chessboard into a console.\n\n"\
-               "--html:\n"\
-               "      Prints final result of chessboard into HTML file ('board.html' by default).\n\n"\
-               "--help:\n"\
-               "      Prints this help message.");
-        return 0;
-      }
+        if (!strcmp(argv[1], "--html\0"))
+            mode = 1;
+        else if (!strcmp(argv[1], "--text\0"))
+            mode = 0;
+        else if (!strcmp(argv[1], "--help\0")) {
+            printf("Usage:\n"
+                   "$ chessviz [--text|--html|--help]\n\n\n"
+                   "--text:\n"
+                   "      Prints final result of chessboard into a console.\n\n"
+                   "--html:\n"
+                   "      Prints final result of chessboard into HTML file "
+                   "('board.html' by default).\n\n"
+                   "--help:\n"
+                   "      Prints this help message.");
+            return 0;
+        }
     }
 
     printf("Welcome to Chessviz!\nThis program is used to interprete moves on "
@@ -86,10 +87,10 @@ int main(int argc, char* argv[])
     }
 
     if (mode == 0)
-      board_print_plain(board);
+        board_print_plain(board);
     else if (mode == 1) {
-      if (!board_print_html(board, "board.html")) {
-        printf("Successfully printed chessboard to 'board.html'!\n");
-      }
+        if (!board_print_html(board, "board.html")) {
+            printf("Successfully printed chessboard to 'board.html'!\n");
+        }
     }
 }
