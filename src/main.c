@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "board_print_plain.h"
+#include "board_print_html.h"
 
 short sideOf(char c)
 {
