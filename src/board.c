@@ -4,15 +4,20 @@ short side_of_piece(char c)
 {
     if ((c >= 'A') && (c <= 'Z')) //Capital letter = white.
         return 1;
-    else if ((c >= 'a') && (c <= 'z')) //Lowercase letter = black.
+    
+    if ((c >= 'a') && (c <= 'z')) //Lowercase letter = black.
         return -1;
 
     return 0; //Some other character - that's an error!
 }
 
-char cell_letter(unsigned short c)
+char cell_column(int cell[2])
 {
-    return c + 'a';
+    return cell[0] + 'a';
+}
+
+char cell_row(int cell[2]) {
+    return cell[1] + '1';
 }
 
 char* piece_name_print(char c)
