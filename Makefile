@@ -1,6 +1,6 @@
 C = gcc
-compile_flag = -Wall -Werror -c
-compile_debug_flag = -Wall -Werror -g -O0 -c
+compile_flag = -Wall -Werror -std=c99 -c
+compile_debug_flag = -Wall -Werror -std=c99 -g -O0 -c
 link_flag = -o
 lib = -lm
 
