@@ -1,20 +1,32 @@
 #include "board_print_html.h"
+#include "board.h"
 #include <stdio.h>
+#include <stdlib.h>
 
-void to_lower_case(char str[])
+#define MAX_STRING_LENGTH 256
+
+char* to_lower_case(char str[])
 {
-    for (unsigned i = 0; str[i] != '\0'; i++)
+    char* new_str = malloc(MAX_STRING_LENGTH * sizeof(char));
+
+    unsigned i = 0;
+    for (; str[i] != '\0'; i++)
         if ((str[i] >= 'A') && (str[i] <= 'Z'))
-            str[i] = str[i] - 'A' + 'a';
+            new_str[i] = str[i] - 'A' + 'a';
+        else
+        	new_str[i] = str[i];
+
+    new_str[i] = '\0';
+    return new_str;
 }
 
-void board_print_html(char board[8][8], const char* file_name)
+int board_print_html(char board[8][8], const char* file_name)
 {
     // Making write access to file
     FILE* html = fopen(file_name, "w");
     if (html == NULL) {
         printf("ERROR. Can't access %s.\n", file_name);
-        return;
+        return -1;
     }
 
     fprintf(html,
@@ -67,9 +79,32 @@ void board_print_html(char board[8][8], const char* file_name)
     		<body>
     			<table class="chessboard">)");
 
+    for (int i = 7; i >= 0; i--) {
+        fprintf(html,
+                R"(
+                    <tr>)");
+        for (int j = 0; j < 8; j++) {
+            fprintf(html,
+                    R"(
+                        <td>)");
+
+            if (board[i][j] != ' ')
+                fprintf(html,
+                        "<span class=\"%s\"></span>",
+                        to_lower_case(piece_name_print(board[i][j])));
+
+            fprintf(html, R"(</td>)");
+        }
+        fprintf(html,
+                R"(
+                    </tr>)");
+    }
+
     fprintf(html,
             R"(
     			</table>
     		</body>
     		</html>)");
+
+    return 0;
 }
