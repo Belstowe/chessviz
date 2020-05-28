@@ -59,12 +59,12 @@ int main(int argc, char* argv[])
         if (substrs < 2)
             break;
         else if (substrs == 2) {
-            if (check_white_move(input_string))
+            if (check_white_move(board, input_string))
                 break;
 
             board_print_plain(board);
 
-            if (check_black_move(white_move_pointer))
+            if (check_black_move(board, white_move_pointer))
                 break;
 
             board_print_plain(board);
@@ -72,12 +72,12 @@ int main(int argc, char* argv[])
             if (check_num(input_string))
                 break;
 
-            if (check_white_move(white_move_pointer))
+            if (check_white_move(board, white_move_pointer))
                 break;
 
             board_print_plain(board);
 
-            if (check_black_move(black_move_pointer))
+            if (check_black_move(board, black_move_pointer))
                 break;
 
             board_print_plain(board);

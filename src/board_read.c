@@ -6,7 +6,6 @@
 #include <string.h>
 
 extern int move_num;
-extern char board[8][8];
 
 /* read_string
  * Returns:
@@ -233,7 +232,7 @@ void interprete_validity(int code)
     }
 }
 
-int check_white_move(char move[])
+int check_white_move(char board[8][8], char move[])
 {
     char piece = check_piece(move);
     if (piece != 'P')
@@ -308,7 +307,7 @@ int check_white_move(char move[])
     return 0;
 }
 
-int check_black_move(char move[])
+int check_black_move(char board[8][8], char move[])
 {
     char piece = check_piece(move) - 'A' + 'a';
     if (piece != 'p')
