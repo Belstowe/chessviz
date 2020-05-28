@@ -5,6 +5,7 @@
 
 int move_num = 1;
 
-int main(int argc, const char* argv[]) {
-	return ctest_main(argc, argv);
+int main(int argc, const char* argv[])
+{
+    return ctest_main(argc, argv);
 }
