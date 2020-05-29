@@ -6,14 +6,15 @@
 
 char* assign_string(const char str[])
 {
-	unsigned size = 1;
-	for (; str[size] != '\0'; size++);
+    unsigned size = 1;
+    for (; str[size] != '\0'; size++)
+        ;
 
-	char* result = malloc(size * sizeof(char));
-	for (unsigned i = 0; i < size; i++)
-		result[i] = str[i];
+    char* result = malloc(size * sizeof(char));
+    for (unsigned i = 0; i < size; i++)
+        result[i] = str[i];
 
-	return result;
+    return result;
 }
 
 CTEST(string_interprete, moves_division)
@@ -77,4 +78,70 @@ CTEST(string_interprete, get_move)
     ASSERT_EQUAL('7', cell_row(goto_cell));
     ASSERT_EQUAL('x', move_type);
     ASSERT_EQUAL('#', move_situation);
+}
+
+CTEST(move_validity, valid_syntax_moves)
+{
+	char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
+                        {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+                        {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'}};
+
+    ASSERT_EQUAL(0, check_white_move(board, "e2-e4"));
+    ASSERT_EQUAL(0, check_black_move(board, "e7-e5"));
+    ASSERT_EQUAL(0, check_white_move(board, "Bf1-c4"));
+    ASSERT_EQUAL(0, check_black_move(board, "Nb8-c6"));
+    ASSERT_EQUAL(0, check_white_move(board, "Qd1-h5"));
+    ASSERT_EQUAL(0, check_black_move(board, "Ng8-f6"));
+    ASSERT_EQUAL(1, check_white_move(board, "Qh5xf7#"));
+}
+
+CTEST(move_validity, invalid_syntax_moves)
+{
+	char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
+                        {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
+                        {'p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'},
+                        {'r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'}};
+
+    ASSERT_EQUAL(-1, check_white_move(board, "e2e4"));
+    ASSERT_EQUAL(-1, check_white_move(board, "e4f"));
+    ASSERT_EQUAL(-1, check_white_move(board, "1"));
+    ASSERT_EQUAL(-1, check_white_move(board, "YOLO"));
+
+    ASSERT_EQUAL(0, check_white_move(board, "Be2-e4"));
+    ASSERT_EQUAL(0, check_white_move(board, "Be4xe5-ssss"));
+}
+
+CTEST(move_validity, pawn_valid_move)
+{
+	ASSERT_EQUAL(0, check_move_validity('P', '-', {4, 1}, {4, 3}));
+	ASSERT_EQUAL(0, check_move_validity('P', '-', {4, 3}, {4, 4}));
+	ASSERT_EQUAL(0, check_move_validity('P', 'x', {6, 1}, {7, 2}));
+
+	ASSERT_EQUAL(0, check_move_validity('p', '-', {4, 6}, {4, 4}));
+	ASSERT_EQUAL(0, check_move_validity('p', '-', {4, 4}, {4, 3}));
+	ASSERT_EQUAL(0, check_move_validity('p', 'x', {4, 3}, {3, 2}));
+}
+
+CTEST(move_validity, pawn_invalid_move)
+{
+	ASSERT_EQUAL(3, check_move_validity('P', 'x', {4, 1}, {4, 3}));
+	ASSERT_EQUAL(1, check_move_validity('P', '-', {4, 1}, {4, 4}));
+	ASSERT_EQUAL(1, check_move_validity('P', '-', {4, 2}, {4, 4}));
+	ASSERT_EQUAL(1, check_move_validity('P', '-', {4, 1}, {4, 0}));
+	ASSERT_EQUAL(2, check_move_validity('P', '-', {4, 1}, {5, 1}));
+
+	ASSERT_EQUAL(3, check_move_validity('p', 'x', {4, 6}, {4, 4}));
+	ASSERT_EQUAL(1, check_move_validity('p', '-', {4, 6}, {4, 3}));
+	ASSERT_EQUAL(1, check_move_validity('p', '-', {4, 5}, {4, 3}));
+	ASSERT_EQUAL(1, check_move_validity('p', '-', {4, 6}, {4, 7}));
+	ASSERT_EQUAL(2, check_move_validity('p', '-', {4, 6}, {5, 6}));
 }
