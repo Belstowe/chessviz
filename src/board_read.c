@@ -37,56 +37,46 @@ int read_string(char str_in[], unsigned limit)
     return -1;
 }
 
+/* move_string_split
+ * Splits string to three specific substrings: number of move, move of white and
+ * move of black. Returns: 1?? - got num; ?1? - got move_white;
+ * ??1 - got move_black;
+ * 0 - got nothing.
+ */
 int move_string_split(char* num[], char* move_white[], char* move_black[])
 {
-    unsigned i = 0, substrs = 0;
+    unsigned i = 0;
+    unsigned short num_checked = 0, move_white_checked = 0,
+                   move_black_checked = 0;
     char* str = (*num);
 
-    while (str[i] == ' ')
-        i++;
-    if (str[i] == '\0')
-        return substrs;
-    (*num) = &(str[i]);
-    substrs++;
+    for (; str[i] != '\0'; i++) {
+        if (str[i] == ' ')
+            continue;
 
-    while (str[i] != ' ') {
+        if ((str[i] >= '1') && (str[i] <= '9') && (!num_checked)) {
+            (*num) = &(str[i]);
+            num_checked = 1;
+        } else {
+            if (!move_white_checked) {
+                (*move_white) = &(str[i]);
+                move_white_checked = 1;
+            } else if (!move_black_checked) {
+                (*move_black) = &(str[i]);
+                move_black_checked = 1;
+            }
+        }
+
+        while ((str[i] != ' ') && (str[i] != '\0'))
+            i++;
+
         if (str[i] == '\0')
-            return substrs;
-        i++;
+            break;
+        else
+            str[i] = '\0';
     }
-    str[i] = '\0';
-    i++;
 
-    while (str[i] == ' ')
-        i++;
-    if (str[i] == '\0')
-        return substrs;
-    (*move_white) = &(str[i]);
-    substrs++;
-
-    while (str[i] != ' ') {
-        if (str[i] == '\0')
-            return substrs;
-        i++;
-    }
-    str[i] = '\0';
-    i++;
-
-    while (str[i] == ' ')
-        i++;
-    if (str[i] == '\0')
-        return substrs;
-    (*move_black) = &(str[i]);
-    substrs++;
-
-    while (str[i] != ' ') {
-        if (str[i] == '\0')
-            return substrs;
-        i++;
-    }
-    str[i] = '\0';
-
-    return substrs;
+    return (100 * num_checked + 10 * move_white_checked + move_black_checked);
 }
 
 char check_piece(char move[])
