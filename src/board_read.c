@@ -6,7 +6,6 @@
 #include <string.h>
 
 extern int move_num;
-extern char board[8][8];
 
 /* read_string
  * Returns:
@@ -98,34 +97,6 @@ char check_piece(char move[])
         return move[0];
     else
         return 'P';
-}
-
-unsigned check_move_col(char move[], int cell[2])
-{
-    unsigned i = 0;
-    while (((move[i] < 'a') || (move[i] > 'h')) && (move[i] != '\0'))
-        i++;
-
-    if (move[i] != '\0')
-        cell[0] = move[i] - 'a';
-    else
-        cell[0] = -1;
-
-    return i;
-}
-
-unsigned check_move_row(char move[], int cell[2])
-{
-    unsigned i = 0;
-    while (((move[i] < '1') || (move[i] > '8')) && (move[i] != '\0'))
-        i++;
-
-    if (move[i] != '\0')
-        cell[1] = move[i] - '1';
-    else
-        cell[1] = -1;
-
-    return i;
 }
 
 char check_move_type(char* move[])
@@ -233,7 +204,7 @@ void interprete_validity(int code)
     }
 }
 
-int check_white_move(char move[])
+int check_white_move(char board[8][8], char move[])
 {
     char piece = check_piece(move);
     if (piece != 'P')
@@ -308,7 +279,7 @@ int check_white_move(char move[])
     return 0;
 }
 
-int check_black_move(char move[])
+int check_black_move(char board[8][8], char move[])
 {
     char piece = check_piece(move) - 'A' + 'a';
     if (piece != 'p')

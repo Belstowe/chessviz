@@ -7,7 +7,9 @@ compiler:
     - gcc
 
 script:
-    - git ls-files src/*.c src/*.h | xargs clang-format -i && git diff --exit-code
+    - git ls-files src/*.c src/*.h test/*.c test/*.h | xargs clang-format -i && git diff --exit-code
+    - make test
+    - ./bin/test
     - make
 
 dist: xenial

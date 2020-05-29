@@ -1,24 +1,7 @@
 #include "board_print_html.h"
 #include "board.h"
+
 #include <stdio.h>
-#include <stdlib.h>
-
-#define MAX_STRING_LENGTH 256
-
-char* to_lower_case(char str[])
-{
-    char* new_str = malloc(MAX_STRING_LENGTH * sizeof(char));
-
-    unsigned i = 0;
-    for (; str[i] != '\0'; i++)
-        if ((str[i] >= 'A') && (str[i] <= 'Z'))
-            new_str[i] = str[i] - 'A' + 'a';
-        else
-            new_str[i] = str[i];
-
-    new_str[i] = '\0';
-    return new_str;
-}
 
 int board_print_html(char board[8][8], const char* file_name)
 {

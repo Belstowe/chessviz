@@ -1,5 +1,9 @@
 #include "board.h"
 
+#include <stdlib.h>
+
+#define MAX_STRING_LENGTH 256
+
 short side_of_piece(char c)
 {
     if ((c >= 'A') && (c <= 'Z')) // Capital letter = white.
@@ -19,6 +23,44 @@ char cell_column(int cell[2])
 char cell_row(int cell[2])
 {
     return cell[1] + '1';
+}
+
+unsigned check_move_col(const char move[], int cell[2])
+{
+    unsigned i = 0;
+    while (((move[i] < 'a') || (move[i] > 'h')) && (move[i] != '\0'))
+        i++;
+
+    if (move[i] != '\0')
+        cell[0] = move[i] - 'a';
+    else
+        cell[0] = -1;
+
+    return i;
+}
+
+unsigned check_move_row(const char move[], int cell[2])
+{
+    unsigned i = 0;
+    while (((move[i] < '1') || (move[i] > '8')) && (move[i] != '\0'))
+        i++;
+
+    if (move[i] != '\0')
+        cell[1] = move[i] - '1';
+    else
+        cell[1] = -1;
+
+    return i;
+}
+
+int* cell_compose(const char cell_str[])
+{
+    int* result_cell = malloc(2 * sizeof(int));
+
+    check_move_row(cell_str, result_cell);
+    check_move_col(cell_str, result_cell);
+
+    return result_cell;
 }
 
 char* piece_name_print(char c)
@@ -53,4 +95,19 @@ char* piece_name_print(char c)
     default:
         return "Unknown";
     }
+}
+
+char* to_lower_case(char str[])
+{
+    char* new_str = malloc(MAX_STRING_LENGTH * sizeof(char));
+
+    unsigned i = 0;
+    for (; str[i] != '\0'; i++)
+        if ((str[i] >= 'A') && (str[i] <= 'Z'))
+            new_str[i] = str[i] - 'A' + 'a';
+        else
+            new_str[i] = str[i];
+
+    new_str[i] = '\0';
+    return new_str;
 }
