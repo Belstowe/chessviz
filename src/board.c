@@ -1,5 +1,9 @@
 #include "board.h"
 
+#include <stdlib.h>
+
+#define MAX_STRING_LENGTH 256
+
 short side_of_piece(char c)
 {
     if ((c >= 'A') && (c <= 'Z')) // Capital letter = white.
@@ -53,4 +57,19 @@ char* piece_name_print(char c)
     default:
         return "Unknown";
     }
+}
+
+char* to_lower_case(char str[])
+{
+    char* new_str = malloc(MAX_STRING_LENGTH * sizeof(char));
+
+    unsigned i = 0;
+    for (; str[i] != '\0'; i++)
+        if ((str[i] >= 'A') && (str[i] <= 'Z'))
+            new_str[i] = str[i] - 'A' + 'a';
+        else
+            new_str[i] = str[i];
+
+    new_str[i] = '\0';
+    return new_str;
 }

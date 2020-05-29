@@ -46,7 +46,7 @@ BoardRead.od:
 clean:
 	rm -rf ./build/*.o ./build/src/*.o ./build/test/*.o
 
-test: clean TMain.o BoardPrintPlain.o BoardPrintHtml.o BoardRead.o Board.o TBoard.o
+test: clean TMain.o BoardPrintPlain.o BoardPrintHtml.o BoardRead.o TBoardRead.o Board.o TBoard.o
 	$(C) ./build/test/*.o ./build/src/*.o $(link_flag) ./bin/test
 
 TMain.o:
@@ -54,3 +54,6 @@ TMain.o:
 
 TBoard.o:
 	$(C) $(test_include_local_headers) $(compile_flag) ./test/t_board.c -o ./build/test/t_board.o
+
+TBoardRead.o:
+	$(C) $(test_include_local_headers) $(compile_flag) ./test/t_board_read.c -o ./build/test/t_board_read.o
