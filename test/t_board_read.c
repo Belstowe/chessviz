@@ -45,16 +45,14 @@ CTEST(string_interprete, piece_recognition)
 
 CTEST(string_interprete, get_move)
 {
-    int orig_cell[2], goto_cell[2];
+    Cell *orig_cell, *goto_cell;
     char move_type;
     char move_situation;
 
     char* test_move1 = assign_string("e2-e4 e7-e5");
-    check_move_col(test_move1, orig_cell);
-    check_move_row(test_move1, orig_cell);
+    orig_cell = cell_compose(test_move1);
     move_type = check_move_type(&test_move1);
-    check_move_col(test_move1, goto_cell);
-    check_move_row(test_move1, goto_cell);
+    goto_cell = cell_compose(test_move1);
     move_situation = check_move_situation(test_move1);
 
     ASSERT_EQUAL('e', cell_column(orig_cell));
@@ -65,11 +63,9 @@ CTEST(string_interprete, get_move)
     ASSERT_EQUAL('\0', move_situation);
 
     char* test_move2 = assign_string("Qh5xf7#");
-    check_move_col(test_move2, orig_cell);
-    check_move_row(test_move2, orig_cell);
+    orig_cell = cell_compose(test_move2);
     move_type = check_move_type(&test_move2);
-    check_move_col(test_move2, goto_cell);
-    check_move_row(test_move2, goto_cell);
+    goto_cell = cell_compose(test_move2);
     move_situation = check_move_situation(test_move2);
 
     ASSERT_EQUAL('h', cell_column(orig_cell));
@@ -122,7 +118,7 @@ CTEST(move_validity, invalid_syntax_moves)
 
 CTEST(move_validity, pawn_valid_move)
 {
-    int *orig_cell, *goto_cell;
+    Cell *orig_cell, *goto_cell;
 
     orig_cell = cell_compose("e2");
     goto_cell = cell_compose("e4");
@@ -151,7 +147,7 @@ CTEST(move_validity, pawn_valid_move)
 
 CTEST(move_validity, pawn_invalid_move)
 {
-    int *orig_cell, *goto_cell;
+    Cell *orig_cell, *goto_cell;
 
     orig_cell = cell_compose("e2");
     goto_cell = cell_compose("e4");

@@ -1,5 +1,4 @@
 #include "board_read.h"
-#include "board.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -127,8 +126,7 @@ char check_move_situation(char move[])
  * enemy piece! 3 - A Pawn always chops in diagonal, forward by a cell and side
  * by a cell!
  */
-int check_move_validity(
-        char piece, int type, int orig_cell[2], int goto_cell[2])
+int check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
 {
     switch (piece) {
     case 'P':
@@ -210,11 +208,11 @@ int check_white_move(char board[8][8], char move[])
     if (piece != 'P')
         move = &(move[1]);
 
-    int orig_cell[2];
+    Cell* orig_cell = malloc(sizeof(Cell));
     int pos;
     pos = check_move_col(move, orig_cell);
     pos -= check_move_row(move, orig_cell);
-    if (orig_cell[0] == -1 || orig_cell[1] == -1) {
+    if (orig_cell->column == -1 || orig_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of white: ERROR.\n"
                " * Couldn't find original move specification.\n\n",
@@ -230,7 +228,7 @@ int check_white_move(char board[8][8], char move[])
                " * Might be the consequence of a corruption.\n\n",
                move_num);
 
-    if (board[orig_cell[1]][orig_cell[0]] != piece)
+    if (board[orig_cell->row][orig_cell->column] != piece)
         printf("/* MOVE %d:\n"
                " * Checking move of white: WARNING.\n"
                " * No %s on original cell: %c%c.\n"
@@ -249,11 +247,11 @@ int check_white_move(char board[8][8], char move[])
         return -1;
     }
 
-    int goto_cell[2];
+    Cell* goto_cell = malloc(sizeof(Cell));
     pos = check_move_col(move, goto_cell);
     pos -= check_move_row(move, goto_cell);
 
-    if (goto_cell[0] == -1 || goto_cell[1] == -1) {
+    if (goto_cell->column == -1 || goto_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of white: ERROR.\n"
                " * Couldn't find go-to move specification.\n\n",
@@ -270,8 +268,8 @@ int check_white_move(char board[8][8], char move[])
                move_num);
 
     interprete_validity(check_move_validity(piece, type, orig_cell, goto_cell));
-    board[orig_cell[1]][orig_cell[0]] = ' ';
-    board[goto_cell[1]][goto_cell[0]] = piece;
+    board[orig_cell->row][orig_cell->column] = ' ';
+    board[goto_cell->row][goto_cell->column] = piece;
 
     if (check_move_situation(move) == '#')
         return 1;
@@ -285,11 +283,11 @@ int check_black_move(char board[8][8], char move[])
     if (piece != 'p')
         move = &(move[1]);
 
-    int orig_cell[2];
+    Cell* orig_cell = malloc(sizeof(Cell));
     int pos;
     pos = check_move_col(move, orig_cell);
     pos -= check_move_row(move, orig_cell);
-    if (orig_cell[0] == -1 || orig_cell[1] == -1) {
+    if (orig_cell->column == -1 || orig_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of black: ERROR.\n"
                " * Couldn't find original move specification.\n\n",
@@ -305,7 +303,7 @@ int check_black_move(char board[8][8], char move[])
                " * Might be the consequence of a corruption.\n\n",
                move_num);
 
-    if (board[orig_cell[1]][orig_cell[0]] != piece)
+    if (board[orig_cell->row][orig_cell->column] != piece)
         printf("/* MOVE %d:\n"
                " * Checking move of black: WARNING.\n"
                " * No %s on original cell: %c%c.\n"
@@ -324,11 +322,11 @@ int check_black_move(char board[8][8], char move[])
         return -1;
     }
 
-    int goto_cell[2];
+    Cell* goto_cell = malloc(sizeof(Cell));
     pos = check_move_col(move, goto_cell);
     pos -= check_move_row(move, goto_cell);
 
-    if (goto_cell[0] == -1 || goto_cell[1] == -1) {
+    if (goto_cell->column == -1 || goto_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of black: ERROR.\n"
                " * Couldn't find go-to move specification.\n\n",
@@ -345,8 +343,8 @@ int check_black_move(char board[8][8], char move[])
                move_num);
 
     interprete_validity(check_move_validity(piece, type, orig_cell, goto_cell));
-    board[orig_cell[1]][orig_cell[0]] = ' ';
-    board[goto_cell[1]][goto_cell[0]] = piece;
+    board[orig_cell->row][orig_cell->column] = ' ';
+    board[goto_cell->row][goto_cell->column] = piece;
 
     if (check_move_situation(move) == '#')
         return 1;

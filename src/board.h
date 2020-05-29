@@ -1,12 +1,17 @@
 #ifndef BOARD_H
 #define BOARD_H
 
+typedef struct cell_t {
+	int column;
+	int row;
+} Cell;
+
 short side_of_piece(char c);
-char cell_column(int cell[2]);
-char cell_row(int cell[2]);
-unsigned check_move_col(const char move[], int cell[2]);
-unsigned check_move_row(const char move[], int cell[2]);
-int* cell_compose(const char cell_str[]);
+char cell_column(Cell* cell);
+char cell_row(Cell* cell);
+unsigned check_move_col(const char move[], Cell* cell);
+unsigned check_move_row(const char move[], Cell* cell);
+Cell* cell_compose(const char cell_str[]);
 char* piece_name_print(char c);
 char* to_lower_case(char str[]);
 

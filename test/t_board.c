@@ -20,9 +20,7 @@ CTEST(board_assist, piece_side)
 CTEST(board_assist, cell_correct_name)
 {
     // We will take g2 for example
-    int cell[2];
-    cell[0] = 6; // g
-    cell[1] = 1; // 2
+    Cell* cell = cell_compose("g2");
 
     const char cell_column_result = cell_column(cell);
     const char cell_row_result = cell_row(cell);
