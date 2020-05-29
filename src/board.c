@@ -63,6 +63,17 @@ Cell* cell_compose(const char cell_str[])
     return result_cell;
 }
 
+char* cell_decompose(const Cell* cell)
+{
+    char* result = malloc(3 * sizeof(char));
+
+    result[0] = cell->column + 'a';
+    result[1] = cell->row + '1';
+    result[2] = '\0';
+
+    return result;
+}
+
 char* piece_name_print(char c)
 {
     switch (c) {

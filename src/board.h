@@ -12,6 +12,7 @@ char cell_row(Cell* cell);
 unsigned check_move_col(const char move[], Cell* cell);
 unsigned check_move_row(const char move[], Cell* cell);
 Cell* cell_compose(const char cell_str[]);
+char* cell_decompose(const Cell* cell);
 char* piece_name_print(char c);
 char* to_lower_case(char str[]);
 

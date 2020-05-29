@@ -231,12 +231,11 @@ int check_white_move(char board[8][8], char move[])
     if (board[orig_cell->row][orig_cell->column] != piece)
         printf("/* MOVE %d:\n"
                " * Checking move of white: WARNING.\n"
-               " * No %s on original cell: %c%c.\n"
+               " * No %s on original cell: %s.\n"
                " * This for sure will lead to chessboard curiosities!\n\n",
                move_num,
                piece_name_print(piece),
-               cell_column(orig_cell),
-               cell_row(orig_cell));
+               cell_decompose(orig_cell));
 
     int type = check_move_type(&move);
     if (type == '\0') {
@@ -306,12 +305,11 @@ int check_black_move(char board[8][8], char move[])
     if (board[orig_cell->row][orig_cell->column] != piece)
         printf("/* MOVE %d:\n"
                " * Checking move of black: WARNING.\n"
-               " * No %s on original cell: %c%c.\n"
+               " * No %s on original cell: %s.\n"
                " * This for sure will lead to chessboard curiosities!\n\n",
                move_num,
                piece_name_print(piece),
-               cell_column(orig_cell),
-               cell_row(orig_cell));
+               cell_decompose(orig_cell));
 
     int type = check_move_type(&move);
     if (type == '\0') {
