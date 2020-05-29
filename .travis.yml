@@ -8,6 +8,8 @@ compiler:
 
 script:
     - git ls-files src/*.c src/*.h test/*.c test/*.h | xargs clang-format -i && git diff --exit-code
+    - make test
+    - ./bin/test
     - make
 
 dist: xenial
