@@ -12,23 +12,23 @@ CTEST(board_assist, piece_side)
     const int black_side_result = side_of_piece(black_piece);
     const int unknown_result = side_of_piece(unknown);
 
-    ASSERT_EQUAL(white_side_result, 1);
-    ASSERT_EQUAL(black_side_result, -1);
-    ASSERT_EQUAL(unknown_result, 0);
+    ASSERT_EQUAL(1, white_side_result);
+    ASSERT_EQUAL(-1, black_side_result);
+    ASSERT_EQUAL(0, unknown_result);
 }
 
 CTEST(board_assist, cell_correct_name)
 {
     // We will take g2 for example
-    int cell[2];
-    cell[0] = 6; // g
-    cell[1] = 1; // 2
+    Cell* cell = cell_compose("g2");
 
     const char cell_column_result = cell_column(cell);
     const char cell_row_result = cell_row(cell);
+    const char* cell_string = cell_decompose(cell);
 
-    ASSERT_EQUAL(cell_column_result, 'g');
-    ASSERT_EQUAL(cell_row_result, '2');
+    ASSERT_EQUAL('g', cell_column_result);
+    ASSERT_EQUAL('2', cell_row_result);
+    ASSERT_STR("g2", cell_string);
 }
 
 CTEST(board_assist, pieces_names)

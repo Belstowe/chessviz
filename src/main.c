@@ -56,27 +56,19 @@ int main(int argc, char* argv[])
         status = read_string(input_string, MAX_STRING_SIZE);
         substrs = move_string_split(
                 &input_string, &white_move_pointer, &black_move_pointer);
-        if (substrs < 2)
-            break;
-        else if (substrs == 2) {
-            if (check_white_move(board, input_string))
-                break;
 
-            board_print_plain(board);
-
-            if (check_black_move(board, white_move_pointer))
-                break;
-
-            board_print_plain(board);
-        } else if (substrs == 3) {
+        if (substrs / 100)
             if (check_num(input_string))
                 break;
 
+        if ((substrs / 10) % 10) {
             if (check_white_move(board, white_move_pointer))
                 break;
 
             board_print_plain(board);
+        }
 
+        if (substrs % 10) {
             if (check_black_move(board, black_move_pointer))
                 break;
 

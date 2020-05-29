@@ -1,5 +1,4 @@
 #include "board_read.h"
-#include "board.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,56 +37,46 @@ int read_string(char str_in[], unsigned limit)
     return -1;
 }
 
+/* move_string_split
+ * Splits string to three specific substrings: number of move, move of white and
+ * move of black. Returns: 1?? - got num; ?1? - got move_white;
+ * ??1 - got move_black;
+ * 0 - got nothing.
+ */
 int move_string_split(char* num[], char* move_white[], char* move_black[])
 {
-    unsigned i = 0, substrs = 0;
+    unsigned i = 0;
+    unsigned short num_checked = 0, move_white_checked = 0,
+                   move_black_checked = 0;
     char* str = (*num);
 
-    while (str[i] == ' ')
-        i++;
-    if (str[i] == '\0')
-        return substrs;
-    (*num) = &(str[i]);
-    substrs++;
+    for (; str[i] != '\0'; i++) {
+        if (str[i] == ' ')
+            continue;
 
-    while (str[i] != ' ') {
+        if ((str[i] >= '1') && (str[i] <= '9') && (!num_checked)) {
+            (*num) = &(str[i]);
+            num_checked = 1;
+        } else {
+            if (!move_white_checked) {
+                (*move_white) = &(str[i]);
+                move_white_checked = 1;
+            } else if (!move_black_checked) {
+                (*move_black) = &(str[i]);
+                move_black_checked = 1;
+            }
+        }
+
+        while ((str[i] != ' ') && (str[i] != '\0'))
+            i++;
+
         if (str[i] == '\0')
-            return substrs;
-        i++;
+            break;
+        else
+            str[i] = '\0';
     }
-    str[i] = '\0';
-    i++;
 
-    while (str[i] == ' ')
-        i++;
-    if (str[i] == '\0')
-        return substrs;
-    (*move_white) = &(str[i]);
-    substrs++;
-
-    while (str[i] != ' ') {
-        if (str[i] == '\0')
-            return substrs;
-        i++;
-    }
-    str[i] = '\0';
-    i++;
-
-    while (str[i] == ' ')
-        i++;
-    if (str[i] == '\0')
-        return substrs;
-    (*move_black) = &(str[i]);
-    substrs++;
-
-    while (str[i] != ' ') {
-        if (str[i] == '\0')
-            return substrs;
-        i++;
-    }
-    str[i] = '\0';
-
-    return substrs;
+    return (100 * num_checked + 10 * move_white_checked + move_black_checked);
 }
 
 char check_piece(char move[])
@@ -119,16 +108,8 @@ char check_move_situation(char move[])
     return move[i];
 }
 
-/* check_move_validity
- * Returns:
- *     0 - success;
- *     1 - A Pawn can't move further than 1 cell forward (or 2 cells in case of
- * starting position)! 2 - A Pawn can't go to other column unless by chopping an
- * enemy piece! 3 - A Pawn always chops in diagonal, forward by a cell and side
- * by a cell!
- */
-int check_move_validity(
-        char piece, int type, int orig_cell[2], int goto_cell[2])
+enum ValidateCode
+check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
 {
     switch (piece) {
     case 'P':
@@ -136,21 +117,21 @@ int check_move_validity(
             if (cell_row(orig_cell) == '2') {
                 if ((cell_row(goto_cell) != '3')
                     && (cell_row(goto_cell) != '4'))
-                    return 1;
+                    return PawnRowSwitchError;
             } else {
                 if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
-                    return 1;
+                    return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
-                return 2;
+                return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
             if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
                 && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
-                return 3;
+                return PawnChopWrong;
 
             if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
-                return 3;
+                return PawnChopWrong;
         }
         break;
 
@@ -159,47 +140,47 @@ int check_move_validity(
             if (cell_row(orig_cell) == '7') {
                 if ((cell_row(goto_cell) != '6')
                     && (cell_row(goto_cell) != '5'))
-                    return 1;
+                    return PawnRowSwitchError;
             } else {
                 if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
-                    return 1;
+                    return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
-                return 2;
+                return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
             if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
                 && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
-                return 3;
+                return PawnChopWrong;
 
             if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
-                return 3;
+                return PawnChopWrong;
         }
         break;
     }
 
-    return 0;
+    return Valid;
 }
 
-void interprete_validity(int code)
+void interprete_validity(enum ValidateCode code)
 {
-    if (code == 0)
-        return;
-
     switch (code) {
-    case 1:
+    case PawnRowSwitchError:
         printf(" * A Pawn can't move further than 1 cell forward (or 2 cells "
                "in case of starting position)!\n\n");
         break;
 
-    case 2:
+    case PawnColumnSwitchNoChop:
         printf(" * A Pawn can't go to other column unless by chopping an enemy "
                "piece!\n\n");
         break;
 
-    case 3:
+    case PawnChopWrong:
         printf(" * A Pawn always chops in diagonal, forward by a cell and side "
                "by a cell!\n\n");
+        break;
+
+    default:
         break;
     }
 }
@@ -210,11 +191,11 @@ int check_white_move(char board[8][8], char move[])
     if (piece != 'P')
         move = &(move[1]);
 
-    int orig_cell[2];
+    Cell* orig_cell = malloc(sizeof(Cell));
     int pos;
     pos = check_move_col(move, orig_cell);
     pos -= check_move_row(move, orig_cell);
-    if (orig_cell[0] == -1 || orig_cell[1] == -1) {
+    if (orig_cell->column == -1 || orig_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of white: ERROR.\n"
                " * Couldn't find original move specification.\n\n",
@@ -230,15 +211,14 @@ int check_white_move(char board[8][8], char move[])
                " * Might be the consequence of a corruption.\n\n",
                move_num);
 
-    if (board[orig_cell[1]][orig_cell[0]] != piece)
+    if (board[orig_cell->row][orig_cell->column] != piece)
         printf("/* MOVE %d:\n"
                " * Checking move of white: WARNING.\n"
-               " * No %s on original cell: %c%c.\n"
+               " * No %s on original cell: %s.\n"
                " * This for sure will lead to chessboard curiosities!\n\n",
                move_num,
                piece_name_print(piece),
-               cell_column(orig_cell),
-               cell_row(orig_cell));
+               cell_decompose(orig_cell));
 
     int type = check_move_type(&move);
     if (type == '\0') {
@@ -249,11 +229,11 @@ int check_white_move(char board[8][8], char move[])
         return -1;
     }
 
-    int goto_cell[2];
+    Cell* goto_cell = malloc(sizeof(Cell));
     pos = check_move_col(move, goto_cell);
     pos -= check_move_row(move, goto_cell);
 
-    if (goto_cell[0] == -1 || goto_cell[1] == -1) {
+    if (goto_cell->column == -1 || goto_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of white: ERROR.\n"
                " * Couldn't find go-to move specification.\n\n",
@@ -270,8 +250,8 @@ int check_white_move(char board[8][8], char move[])
                move_num);
 
     interprete_validity(check_move_validity(piece, type, orig_cell, goto_cell));
-    board[orig_cell[1]][orig_cell[0]] = ' ';
-    board[goto_cell[1]][goto_cell[0]] = piece;
+    board[orig_cell->row][orig_cell->column] = ' ';
+    board[goto_cell->row][goto_cell->column] = piece;
 
     if (check_move_situation(move) == '#')
         return 1;
@@ -285,11 +265,11 @@ int check_black_move(char board[8][8], char move[])
     if (piece != 'p')
         move = &(move[1]);
 
-    int orig_cell[2];
+    Cell* orig_cell = malloc(sizeof(Cell));
     int pos;
     pos = check_move_col(move, orig_cell);
     pos -= check_move_row(move, orig_cell);
-    if (orig_cell[0] == -1 || orig_cell[1] == -1) {
+    if (orig_cell->column == -1 || orig_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of black: ERROR.\n"
                " * Couldn't find original move specification.\n\n",
@@ -305,15 +285,14 @@ int check_black_move(char board[8][8], char move[])
                " * Might be the consequence of a corruption.\n\n",
                move_num);
 
-    if (board[orig_cell[1]][orig_cell[0]] != piece)
+    if (board[orig_cell->row][orig_cell->column] != piece)
         printf("/* MOVE %d:\n"
                " * Checking move of black: WARNING.\n"
-               " * No %s on original cell: %c%c.\n"
+               " * No %s on original cell: %s.\n"
                " * This for sure will lead to chessboard curiosities!\n\n",
                move_num,
                piece_name_print(piece),
-               cell_column(orig_cell),
-               cell_row(orig_cell));
+               cell_decompose(orig_cell));
 
     int type = check_move_type(&move);
     if (type == '\0') {
@@ -324,11 +303,11 @@ int check_black_move(char board[8][8], char move[])
         return -1;
     }
 
-    int goto_cell[2];
+    Cell* goto_cell = malloc(sizeof(Cell));
     pos = check_move_col(move, goto_cell);
     pos -= check_move_row(move, goto_cell);
 
-    if (goto_cell[0] == -1 || goto_cell[1] == -1) {
+    if (goto_cell->column == -1 || goto_cell->row == -1) {
         printf("/* MOVE %d:\n"
                " * Checking move of black: ERROR.\n"
                " * Couldn't find go-to move specification.\n\n",
@@ -345,8 +324,8 @@ int check_black_move(char board[8][8], char move[])
                move_num);
 
     interprete_validity(check_move_validity(piece, type, orig_cell, goto_cell));
-    board[orig_cell[1]][orig_cell[0]] = ' ';
-    board[goto_cell[1]][goto_cell[0]] = piece;
+    board[orig_cell->row][orig_cell->column] = ' ';
+    board[goto_cell->row][goto_cell->column] = piece;
 
     if (check_move_situation(move) == '#')
         return 1;
