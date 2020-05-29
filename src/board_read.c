@@ -108,15 +108,8 @@ char check_move_situation(char move[])
     return move[i];
 }
 
-/* check_move_validity
- * Returns:
- *     0 - success;
- *     1 - A Pawn can't move further than 1 cell forward (or 2 cells in case of
- * starting position)! 2 - A Pawn can't go to other column unless by chopping an
- * enemy piece! 3 - A Pawn always chops in diagonal, forward by a cell and side
- * by a cell!
- */
-int check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
+enum ValidateCode
+check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
 {
     switch (piece) {
     case 'P':
@@ -124,21 +117,21 @@ int check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
             if (cell_row(orig_cell) == '2') {
                 if ((cell_row(goto_cell) != '3')
                     && (cell_row(goto_cell) != '4'))
-                    return 1;
+                    return PawnRowSwitchError;
             } else {
                 if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
-                    return 1;
+                    return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
-                return 2;
+                return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
             if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
                 && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
-                return 3;
+                return PawnChopWrong;
 
             if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
-                return 3;
+                return PawnChopWrong;
         }
         break;
 
@@ -147,47 +140,47 @@ int check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
             if (cell_row(orig_cell) == '7') {
                 if ((cell_row(goto_cell) != '6')
                     && (cell_row(goto_cell) != '5'))
-                    return 1;
+                    return PawnRowSwitchError;
             } else {
                 if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
-                    return 1;
+                    return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
-                return 2;
+                return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
             if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
                 && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
-                return 3;
+                return PawnChopWrong;
 
             if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
-                return 3;
+                return PawnChopWrong;
         }
         break;
     }
 
-    return 0;
+    return Valid;
 }
 
-void interprete_validity(int code)
+void interprete_validity(enum ValidateCode code)
 {
-    if (code == 0)
-        return;
-
     switch (code) {
-    case 1:
+    case PawnRowSwitchError:
         printf(" * A Pawn can't move further than 1 cell forward (or 2 cells "
                "in case of starting position)!\n\n");
         break;
 
-    case 2:
+    case PawnColumnSwitchNoChop:
         printf(" * A Pawn can't go to other column unless by chopping an enemy "
                "piece!\n\n");
         break;
 
-    case 3:
+    case PawnChopWrong:
         printf(" * A Pawn always chops in diagonal, forward by a cell and side "
                "by a cell!\n\n");
+        break;
+
+    default:
         break;
     }
 }
