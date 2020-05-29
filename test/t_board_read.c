@@ -82,7 +82,7 @@ CTEST(string_interprete, get_move)
 
 CTEST(move_validity, valid_syntax_moves)
 {
-	char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
+    char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
                         {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
                         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -102,7 +102,7 @@ CTEST(move_validity, valid_syntax_moves)
 
 CTEST(move_validity, invalid_syntax_moves)
 {
-	char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
+    char board[8][8] = {{'R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'},
                         {'P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'},
                         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                         {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
@@ -122,74 +122,74 @@ CTEST(move_validity, invalid_syntax_moves)
 
 CTEST(move_validity, pawn_valid_move)
 {
-	int *orig_cell, *goto_cell;
+    int *orig_cell, *goto_cell;
 
-	orig_cell = cell_compose("e2");
-	goto_cell = cell_compose("e4");
-	ASSERT_EQUAL(0, check_move_validity('P', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e2");
+    goto_cell = cell_compose("e4");
+    ASSERT_EQUAL(0, check_move_validity('P', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e4");
-	goto_cell = cell_compose("e5");
-	ASSERT_EQUAL(0, check_move_validity('P', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e4");
+    goto_cell = cell_compose("e5");
+    ASSERT_EQUAL(0, check_move_validity('P', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("g2");
-	goto_cell = cell_compose("h3");
-	ASSERT_EQUAL(0, check_move_validity('P', 'x', orig_cell, goto_cell));
+    orig_cell = cell_compose("g2");
+    goto_cell = cell_compose("h3");
+    ASSERT_EQUAL(0, check_move_validity('P', 'x', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e7");
-	goto_cell = cell_compose("e5");
-	ASSERT_EQUAL(0, check_move_validity('p', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e7");
+    goto_cell = cell_compose("e5");
+    ASSERT_EQUAL(0, check_move_validity('p', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e5");
-	goto_cell = cell_compose("e4");
-	ASSERT_EQUAL(0, check_move_validity('p', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e5");
+    goto_cell = cell_compose("e4");
+    ASSERT_EQUAL(0, check_move_validity('p', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e4");
-	goto_cell = cell_compose("d3");
-	ASSERT_EQUAL(0, check_move_validity('p', 'x', orig_cell, goto_cell));
+    orig_cell = cell_compose("e4");
+    goto_cell = cell_compose("d3");
+    ASSERT_EQUAL(0, check_move_validity('p', 'x', orig_cell, goto_cell));
 }
 
 CTEST(move_validity, pawn_invalid_move)
 {
-	int *orig_cell, *goto_cell;
+    int *orig_cell, *goto_cell;
 
-	orig_cell = cell_compose("e2");
-	goto_cell = cell_compose("e4");
-	ASSERT_EQUAL(3, check_move_validity('P', 'x', orig_cell, goto_cell));
+    orig_cell = cell_compose("e2");
+    goto_cell = cell_compose("e4");
+    ASSERT_EQUAL(3, check_move_validity('P', 'x', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e2");
-	goto_cell = cell_compose("e5");
-	ASSERT_EQUAL(1, check_move_validity('P', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e2");
+    goto_cell = cell_compose("e5");
+    ASSERT_EQUAL(1, check_move_validity('P', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e3");
-	goto_cell = cell_compose("e5");
-	ASSERT_EQUAL(1, check_move_validity('P', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e3");
+    goto_cell = cell_compose("e5");
+    ASSERT_EQUAL(1, check_move_validity('P', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e2");
-	goto_cell = cell_compose("e1");
-	ASSERT_EQUAL(1, check_move_validity('P', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e2");
+    goto_cell = cell_compose("e1");
+    ASSERT_EQUAL(1, check_move_validity('P', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e2");
-	goto_cell = cell_compose("f3");
-	ASSERT_EQUAL(2, check_move_validity('P', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e2");
+    goto_cell = cell_compose("f3");
+    ASSERT_EQUAL(2, check_move_validity('P', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e7");
-	goto_cell = cell_compose("e5");
-	ASSERT_EQUAL(3, check_move_validity('p', 'x', orig_cell, goto_cell));
+    orig_cell = cell_compose("e7");
+    goto_cell = cell_compose("e5");
+    ASSERT_EQUAL(3, check_move_validity('p', 'x', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e7");
-	goto_cell = cell_compose("e4");
-	ASSERT_EQUAL(1, check_move_validity('p', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e7");
+    goto_cell = cell_compose("e4");
+    ASSERT_EQUAL(1, check_move_validity('p', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e6");
-	goto_cell = cell_compose("e4");
-	ASSERT_EQUAL(1, check_move_validity('p', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e6");
+    goto_cell = cell_compose("e4");
+    ASSERT_EQUAL(1, check_move_validity('p', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e6");
-	goto_cell = cell_compose("e7");
-	ASSERT_EQUAL(1, check_move_validity('p', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e6");
+    goto_cell = cell_compose("e7");
+    ASSERT_EQUAL(1, check_move_validity('p', '-', orig_cell, goto_cell));
 
-	orig_cell = cell_compose("e6");
-	goto_cell = cell_compose("f5");
-	ASSERT_EQUAL(2, check_move_validity('p', '-', orig_cell, goto_cell));
+    orig_cell = cell_compose("e6");
+    goto_cell = cell_compose("f5");
+    ASSERT_EQUAL(2, check_move_validity('p', '-', orig_cell, goto_cell));
 }
