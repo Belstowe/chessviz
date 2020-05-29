@@ -2,8 +2,8 @@
 #define BOARD_H
 
 typedef struct cell_t {
-	int column;
-	int row;
+    int column;
+    int row;
 } Cell;
 
 short side_of_piece(char c);

@@ -4,11 +4,11 @@
 #include "board.h"
 
 enum ValidateCode {
-	Valid,
-	NoMove,
-	PawnRowSwitchError,
-	PawnColumnSwitchNoChop,
-	PawnChopWrong
+    Valid,
+    NoMove,
+    PawnRowSwitchError,
+    PawnColumnSwitchNoChop,
+    PawnChopWrong
 };
 
 int read_string(char str_in[], unsigned limit);
