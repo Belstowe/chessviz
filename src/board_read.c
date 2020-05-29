@@ -99,34 +99,6 @@ char check_piece(char move[])
         return 'P';
 }
 
-unsigned check_move_col(char move[], int cell[2])
-{
-    unsigned i = 0;
-    while (((move[i] < 'a') || (move[i] > 'h')) && (move[i] != '\0'))
-        i++;
-
-    if (move[i] != '\0')
-        cell[0] = move[i] - 'a';
-    else
-        cell[0] = -1;
-
-    return i;
-}
-
-unsigned check_move_row(char move[], int cell[2])
-{
-    unsigned i = 0;
-    while (((move[i] < '1') || (move[i] > '8')) && (move[i] != '\0'))
-        i++;
-
-    if (move[i] != '\0')
-        cell[1] = move[i] - '1';
-    else
-        cell[1] = -1;
-
-    return i;
-}
-
 char check_move_type(char* move[])
 {
     char* pointer = *move;

@@ -25,6 +25,44 @@ char cell_row(int cell[2])
     return cell[1] + '1';
 }
 
+unsigned check_move_col(const char move[], int cell[2])
+{
+    unsigned i = 0;
+    while (((move[i] < 'a') || (move[i] > 'h')) && (move[i] != '\0'))
+        i++;
+
+    if (move[i] != '\0')
+        cell[0] = move[i] - 'a';
+    else
+        cell[0] = -1;
+
+    return i;
+}
+
+unsigned check_move_row(const char move[], int cell[2])
+{
+    unsigned i = 0;
+    while (((move[i] < '1') || (move[i] > '8')) && (move[i] != '\0'))
+        i++;
+
+    if (move[i] != '\0')
+        cell[1] = move[i] - '1';
+    else
+        cell[1] = -1;
+
+    return i;
+}
+
+int* cell_compose(const char cell_str[])
+{
+    int* result_cell = malloc(2 * sizeof(int));
+
+    check_move_row(cell_str, result_cell);
+    check_move_col(cell_str, result_cell);
+
+    return result_cell;
+}
+
 char* piece_name_print(char c)
 {
     switch (c) {
