@@ -25,16 +25,16 @@ CTEST(string_interprete, moves_division)
 
     char* test_move1 = assign_string("1. e2-e4 e7-e5");
     substrs = move_string_split(&test_move1, &move_white, &move_black);
-    ASSERT_EQUAL(substrs, 111);
-    ASSERT_STR(test_move1, "1.");
-    ASSERT_STR(move_white, "e2-e4");
-    ASSERT_STR(move_black, "e7-e5");
+    ASSERT_EQUAL(111, substrs);
+    ASSERT_STR("1.", test_move1);
+    ASSERT_STR("e2-e4", move_white);
+    ASSERT_STR("e7-e5", move_black);
 
     char* test_move2 = assign_string("e2-e4 e7-e5");
     substrs = move_string_split(&test_move2, &move_white, &move_black);
-    ASSERT_EQUAL(substrs, 11);
-    ASSERT_STR(move_white, "e2-e4");
-    ASSERT_STR(move_black, "e7-e5");
+    ASSERT_EQUAL(11, substrs);
+    ASSERT_STR("e2-e4", move_white);
+    ASSERT_STR("e7-e5", move_black);
 }
 
 CTEST(string_interprete, piece_recognition)
