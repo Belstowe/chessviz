@@ -159,6 +159,52 @@ check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
                 return PawnChopWrong;
         }
         break;
+
+    case 'N':
+    case 'n':
+        if (!((absolute(row_moved) == 2)
+              && (absolute(col_moved)
+                  == 1))) // Knight move is supposed to be shift by 2 cells one
+                          // side and 1 cell the other side
+            if (!((absolute(row_moved) == 1) && (absolute(col_moved) == 2)))
+                return KnightMoveWrong;
+        break;
+
+    case 'B':
+    case 'b':
+        if (!(absolute(row_moved)
+              == absolute(col_moved))) // If did not move by diagonal...
+            return BishopMoveWrong;
+        break;
+
+    case 'R':
+    case 'r':
+        if (!(absolute(row_moved) > 0
+              && !col_moved)) // If did not move by vertical...
+            if (!(absolute(col_moved) > 0
+                  && !row_moved)) // And did not move by horizontal...
+                return RookMoveWrong;
+        break;
+
+    case 'Q':
+    case 'q':
+        if (!(absolute(row_moved) > 0
+              && !col_moved)) // If did not move by vertical...
+            if (!(absolute(col_moved) > 0
+                  && !row_moved)) // And did not move by horizontal...
+                if (!(absolute(row_moved)
+                      == absolute(
+                              col_moved))) // And did not move by diagonal...
+                    return QueenMoveWrong;
+        break;
+
+    case 'K':
+    case 'k':
+        if ((absolute(row_moved) > 1)
+            || (absolute(col_moved)
+                > 1)) // If a move goes beyond a 1-cell square around king...
+            return KingMoveWrong;
+        break;
     }
 
     return Valid;
@@ -167,6 +213,10 @@ check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
 void interprete_validity(enum ValidateCode code)
 {
     switch (code) {
+    case NoMove:
+        printf(" * No move shift detected at all!\n\n");
+        break;
+
     case PawnRowSwitchError:
         printf(" * A Pawn can't move further than 1 cell forward (or 2 cells "
                "in case of starting position)!\n\n");
@@ -182,8 +232,26 @@ void interprete_validity(enum ValidateCode code)
                "by a cell!\n\n");
         break;
 
-    case NoMove:
-    	printf(" * No move shift detected at all!\n\n");
+    case KnightMoveWrong:
+        printf(" * Knight's move is supposed to be shift by 2 cells one side "
+               "and 1 cell the other side!\n\n");
+        break;
+
+    case BishopMoveWrong:
+        printf(" * Bishops always move by diagonal!\n\n");
+        break;
+
+    case RookMoveWrong:
+        printf(" * Rooks always move either by horizontal OR by vertical!\n\n");
+        break;
+
+    case QueenMoveWrong:
+        printf(" * Queens always move either by horizontal, by vertical OR by "
+               "diagonal!\n\n");
+        break;
+
+    case KingMoveWrong:
+        printf(" * Kings always move in borders of 1 cell square around them!");
         break;
 
     default:

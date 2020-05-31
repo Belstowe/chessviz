@@ -116,6 +116,15 @@ CTEST(move_validity, invalid_syntax_moves)
     ASSERT_EQUAL(0, check_white_move(board, "Be4xe5-ssss"));
 }
 
+CTEST(move_validity, no_shift_move)
+{
+    Cell* cell = cell_compose("e4");
+
+    ASSERT_EQUAL(NoMove, check_move_validity('P', '-', cell, cell));
+    ASSERT_EQUAL(NoMove, check_move_validity('K', 'x', cell, cell));
+    ASSERT_EQUAL(NoMove, check_move_validity('Q', '-', cell, cell));
+}
+
 CTEST(move_validity, pawn_valid_move)
 {
     Cell *orig_cell, *goto_cell;
@@ -206,4 +215,191 @@ CTEST(move_validity, pawn_invalid_move)
     ASSERT_EQUAL(
             PawnColumnSwitchNoChop,
             check_move_validity('p', '-', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, knight_valid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("b8");
+    goto_cell = cell_compose("c6");
+    ASSERT_EQUAL(Valid, check_move_validity('n', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("c6");
+    goto_cell = cell_compose("e5");
+    ASSERT_EQUAL(Valid, check_move_validity('n', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("b1");
+    goto_cell = cell_compose("a3");
+    ASSERT_EQUAL(Valid, check_move_validity('N', '-', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, knight_invalid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("b8");
+    goto_cell = cell_compose("c7");
+    ASSERT_EQUAL(
+            KnightMoveWrong,
+            check_move_validity('n', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("b8");
+    goto_cell = cell_compose("e8");
+    ASSERT_EQUAL(
+            KnightMoveWrong,
+            check_move_validity('n', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("b1");
+    goto_cell = cell_compose("b3");
+    ASSERT_EQUAL(
+            KnightMoveWrong,
+            check_move_validity('N', '-', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, bishop_valid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("c8");
+    goto_cell = cell_compose("f5");
+    ASSERT_EQUAL(Valid, check_move_validity('b', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("c1");
+    goto_cell = cell_compose("a3");
+    ASSERT_EQUAL(Valid, check_move_validity('B', '-', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, bishop_invalid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("c1");
+    goto_cell = cell_compose("f2");
+    ASSERT_EQUAL(
+            BishopMoveWrong,
+            check_move_validity('B', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("c8");
+    goto_cell = cell_compose("c4");
+    ASSERT_EQUAL(
+            BishopMoveWrong,
+            check_move_validity('b', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("c8");
+    goto_cell = cell_compose("e5");
+    ASSERT_EQUAL(
+            BishopMoveWrong,
+            check_move_validity('b', 'x', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, rook_valid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("a8");
+    goto_cell = cell_compose("a2");
+    ASSERT_EQUAL(Valid, check_move_validity('r', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("h1");
+    goto_cell = cell_compose("h3");
+    ASSERT_EQUAL(Valid, check_move_validity('R', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("a1");
+    goto_cell = cell_compose("a2");
+    ASSERT_EQUAL(Valid, check_move_validity('R', 'x', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, rook_invalid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("a8");
+    goto_cell = cell_compose("b2");
+    ASSERT_EQUAL(
+            RookMoveWrong, check_move_validity('r', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("h1");
+    goto_cell = cell_compose("g3");
+    ASSERT_EQUAL(
+            RookMoveWrong, check_move_validity('R', '-', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, queen_valid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("d8");
+    goto_cell = cell_compose("d2");
+    ASSERT_EQUAL(Valid, check_move_validity('q', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("d2");
+    goto_cell = cell_compose("c2");
+    ASSERT_EQUAL(Valid, check_move_validity('q', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("c2");
+    goto_cell = cell_compose("f5");
+    ASSERT_EQUAL(Valid, check_move_validity('q', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("d1");
+    goto_cell = cell_compose("f3");
+    ASSERT_EQUAL(Valid, check_move_validity('Q', '-', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, queen_invalid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("d8");
+    goto_cell = cell_compose("e6");
+    ASSERT_EQUAL(
+            QueenMoveWrong,
+            check_move_validity('q', 'x', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, king_valid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("e8");
+    goto_cell = cell_compose("e7");
+    ASSERT_EQUAL(Valid, check_move_validity('k', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("e7");
+    goto_cell = cell_compose("f6");
+    ASSERT_EQUAL(Valid, check_move_validity('k', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("e1");
+    goto_cell = cell_compose("d2");
+    ASSERT_EQUAL(Valid, check_move_validity('K', 'x', orig_cell, goto_cell));
+}
+
+CTEST(move_validity, king_invalid_move)
+{
+    Cell *orig_cell, *goto_cell;
+
+    orig_cell = cell_compose("e8");
+    goto_cell = cell_compose("e6");
+    ASSERT_EQUAL(
+            KingMoveWrong, check_move_validity('k', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("e8");
+    goto_cell = cell_compose("f6");
+    ASSERT_EQUAL(
+            KingMoveWrong, check_move_validity('k', '-', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("e8");
+    goto_cell = cell_compose("g6");
+    ASSERT_EQUAL(
+            KingMoveWrong, check_move_validity('k', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("e8");
+    goto_cell = cell_compose("g8");
+    ASSERT_EQUAL(
+            KingMoveWrong, check_move_validity('k', 'x', orig_cell, goto_cell));
+
+    orig_cell = cell_compose("e1");
+    goto_cell = cell_compose("f3");
+    ASSERT_EQUAL(
+            KingMoveWrong, check_move_validity('K', 'x', orig_cell, goto_cell));
 }
