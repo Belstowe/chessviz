@@ -74,6 +74,14 @@ char* cell_decompose(const Cell* cell)
     return result;
 }
 
+unsigned absolute(int num)
+{
+    if (num < 0)
+        return (unsigned)(-num);
+
+    return (unsigned)num;
+}
+
 char* piece_name_print(char c)
 {
     switch (c) {

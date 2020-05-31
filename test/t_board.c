@@ -58,3 +58,10 @@ CTEST(board_assist, lower_case_transform)
     ASSERT_STR("ladder", to_lower_case("LaDdEr"));
     ASSERT_STR(" ;", to_lower_case(" ;"));
 }
+
+CTEST(board_assist, getting_absolute_value)
+{
+    ASSERT_EQUAL(2, absolute(2));
+    ASSERT_EQUAL(0, absolute(0));
+    ASSERT_EQUAL(2, absolute(-2));
+}
