@@ -111,26 +111,30 @@ char check_move_situation(char move[])
 enum ValidateCode
 check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
 {
+    int row_moved = row_shift(orig_cell, goto_cell);
+    int col_moved = column_shift(orig_cell, goto_cell);
+
+    if ((row_moved == 0) && (col_moved == 0))
+        return NoMove;
+
     switch (piece) {
     case 'P':
         if (type == '-') {
             if (cell_row(orig_cell) == '2') {
-                if ((cell_row(goto_cell) != '3')
-                    && (cell_row(goto_cell) != '4'))
+                if ((row_moved < 0) || (row_moved > 2))
                     return PawnRowSwitchError;
             } else {
-                if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
+                if (row_moved != 1)
                     return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
                 return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
-            if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
-                && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
+            if (absolute(col_moved) != 1)
                 return PawnChopWrong;
 
-            if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
+            if (row_moved != 1)
                 return PawnChopWrong;
         }
         break;
@@ -138,22 +142,20 @@ check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
     case 'p':
         if (type == '-') {
             if (cell_row(orig_cell) == '7') {
-                if ((cell_row(goto_cell) != '6')
-                    && (cell_row(goto_cell) != '5'))
+                if ((row_moved > 0) || (row_moved < -2))
                     return PawnRowSwitchError;
             } else {
-                if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
+                if (row_moved != -1)
                     return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
                 return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
-            if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
-                && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
+            if (absolute(col_moved) != 1)
                 return PawnChopWrong;
 
-            if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
+            if (row_moved != -1)
                 return PawnChopWrong;
         }
         break;
@@ -178,6 +180,10 @@ void interprete_validity(enum ValidateCode code)
     case PawnChopWrong:
         printf(" * A Pawn always chops in diagonal, forward by a cell and side "
                "by a cell!\n\n");
+        break;
+
+    case NoMove:
+    	printf(" * No move shift detected at all!\n\n");
         break;
 
     default:
