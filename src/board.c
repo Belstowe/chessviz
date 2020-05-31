@@ -74,6 +74,24 @@ char* cell_decompose(const Cell* cell)
     return result;
 }
 
+unsigned absolute(int num)
+{
+    if (num < 0)
+        return (unsigned)(-num);
+
+    return (unsigned)num;
+}
+
+int row_shift(const Cell* orig_cell, const Cell* goto_cell)
+{
+    return goto_cell->row - orig_cell->row;
+}
+
+int column_shift(const Cell* orig_cell, const Cell* goto_cell)
+{
+    return goto_cell->column - orig_cell->column;
+}
+
 char* piece_name_print(char c)
 {
     switch (c) {

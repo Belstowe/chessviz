@@ -111,26 +111,30 @@ char check_move_situation(char move[])
 enum ValidateCode
 check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
 {
+    int row_moved = row_shift(orig_cell, goto_cell);
+    int col_moved = column_shift(orig_cell, goto_cell);
+
+    if ((row_moved == 0) && (col_moved == 0))
+        return NoMove;
+
     switch (piece) {
     case 'P':
         if (type == '-') {
             if (cell_row(orig_cell) == '2') {
-                if ((cell_row(goto_cell) != '3')
-                    && (cell_row(goto_cell) != '4'))
+                if ((row_moved < 0) || (row_moved > 2))
                     return PawnRowSwitchError;
             } else {
-                if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
+                if (row_moved != 1)
                     return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
                 return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
-            if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
-                && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
+            if (absolute(col_moved) != 1)
                 return PawnChopWrong;
 
-            if (cell_row(goto_cell) - cell_row(orig_cell) != 1)
+            if (row_moved != 1)
                 return PawnChopWrong;
         }
         break;
@@ -138,24 +142,68 @@ check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
     case 'p':
         if (type == '-') {
             if (cell_row(orig_cell) == '7') {
-                if ((cell_row(goto_cell) != '6')
-                    && (cell_row(goto_cell) != '5'))
+                if ((row_moved > 0) || (row_moved < -2))
                     return PawnRowSwitchError;
             } else {
-                if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
+                if (row_moved != -1)
                     return PawnRowSwitchError;
             }
 
             if (cell_column(goto_cell) != cell_column(orig_cell))
                 return PawnColumnSwitchNoChop;
         } else if (type == 'x') {
-            if ((cell_column(orig_cell) - cell_column(goto_cell) != 1)
-                && (cell_column(goto_cell) - cell_column(orig_cell) != 1))
+            if (absolute(col_moved) != 1)
                 return PawnChopWrong;
 
-            if (cell_row(orig_cell) - cell_row(goto_cell) != 1)
+            if (row_moved != -1)
                 return PawnChopWrong;
         }
+        break;
+
+    case 'N':
+    case 'n':
+        if (!((absolute(row_moved) == 2)
+              && (absolute(col_moved)
+                  == 1))) // Knight move is supposed to be shift by 2 cells one
+                          // side and 1 cell the other side
+            if (!((absolute(row_moved) == 1) && (absolute(col_moved) == 2)))
+                return KnightMoveWrong;
+        break;
+
+    case 'B':
+    case 'b':
+        if (!(absolute(row_moved)
+              == absolute(col_moved))) // If did not move by diagonal...
+            return BishopMoveWrong;
+        break;
+
+    case 'R':
+    case 'r':
+        if (!(absolute(row_moved) > 0
+              && !col_moved)) // If did not move by vertical...
+            if (!(absolute(col_moved) > 0
+                  && !row_moved)) // And did not move by horizontal...
+                return RookMoveWrong;
+        break;
+
+    case 'Q':
+    case 'q':
+        if (!(absolute(row_moved) > 0
+              && !col_moved)) // If did not move by vertical...
+            if (!(absolute(col_moved) > 0
+                  && !row_moved)) // And did not move by horizontal...
+                if (!(absolute(row_moved)
+                      == absolute(
+                              col_moved))) // And did not move by diagonal...
+                    return QueenMoveWrong;
+        break;
+
+    case 'K':
+    case 'k':
+        if ((absolute(row_moved) > 1)
+            || (absolute(col_moved)
+                > 1)) // If a move goes beyond a 1-cell square around king...
+            return KingMoveWrong;
         break;
     }
 
@@ -165,6 +213,10 @@ check_move_validity(char piece, int type, Cell* orig_cell, Cell* goto_cell)
 void interprete_validity(enum ValidateCode code)
 {
     switch (code) {
+    case NoMove:
+        printf(" * No move shift detected at all!\n\n");
+        break;
+
     case PawnRowSwitchError:
         printf(" * A Pawn can't move further than 1 cell forward (or 2 cells "
                "in case of starting position)!\n\n");
@@ -178,6 +230,28 @@ void interprete_validity(enum ValidateCode code)
     case PawnChopWrong:
         printf(" * A Pawn always chops in diagonal, forward by a cell and side "
                "by a cell!\n\n");
+        break;
+
+    case KnightMoveWrong:
+        printf(" * Knight's move is supposed to be shift by 2 cells one side "
+               "and 1 cell the other side!\n\n");
+        break;
+
+    case BishopMoveWrong:
+        printf(" * Bishops always move by diagonal!\n\n");
+        break;
+
+    case RookMoveWrong:
+        printf(" * Rooks always move either by horizontal OR by vertical!\n\n");
+        break;
+
+    case QueenMoveWrong:
+        printf(" * Queens always move either by horizontal, by vertical OR by "
+               "diagonal!\n\n");
+        break;
+
+    case KingMoveWrong:
+        printf(" * Kings always move in borders of 1 cell square around them!");
         break;
 
     default:

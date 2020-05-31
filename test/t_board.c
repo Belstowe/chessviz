@@ -58,3 +58,23 @@ CTEST(board_assist, lower_case_transform)
     ASSERT_STR("ladder", to_lower_case("LaDdEr"));
     ASSERT_STR(" ;", to_lower_case(" ;"));
 }
+
+CTEST(board_assist, getting_absolute_value)
+{
+    ASSERT_EQUAL(2, absolute(2));
+    ASSERT_EQUAL(0, absolute(0));
+    ASSERT_EQUAL(2, absolute(-2));
+}
+
+CTEST(board_assist, getting_cell_path)
+{
+    Cell* orig_cell = cell_compose("e2");
+    Cell* goto_cell = cell_compose("e4");
+    ASSERT_EQUAL(2, row_shift(orig_cell, goto_cell));
+    ASSERT_EQUAL(0, column_shift(orig_cell, goto_cell));
+
+    orig_cell = cell_compose("e5");
+    goto_cell = cell_compose("f4");
+    ASSERT_EQUAL(-1, row_shift(orig_cell, goto_cell));
+    ASSERT_EQUAL(1, column_shift(orig_cell, goto_cell));
+}

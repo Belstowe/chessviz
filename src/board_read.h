@@ -8,7 +8,12 @@ enum ValidateCode {
     NoMove,
     PawnRowSwitchError,
     PawnColumnSwitchNoChop,
-    PawnChopWrong
+    PawnChopWrong,
+    KnightMoveWrong,
+    BishopMoveWrong,
+    RookMoveWrong,
+    QueenMoveWrong,
+    KingMoveWrong
 };
 
 int read_string(char str_in[], unsigned limit);
